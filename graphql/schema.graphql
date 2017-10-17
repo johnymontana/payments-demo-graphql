@@ -1,0 +1,57 @@
+type LaunderingTarget {
+    id: ID!
+    centrality: Float
+    cluster: String
+    current: Boolean
+    partition: Int
+    totalIncoming: Float @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->() RETURN sum(r.amount)")
+    totalOutgoing: Float @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-() RETURN sum(r.amount)")
+    numIncomingTransfers: Int @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-() RETURN COUNT(*)")
+    numOutgoingTransfers: Int @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->() RETURN COUNT(*)")
+    outgoingTransfers: [Transfer] @cypher(statement:"MATCH (this)-[r:SEND_MONEY_TO]->(rec:Account) WITH this{.*} AS sender, rec{.*} AS receiver, r.amount AS amount RETURN {sender: sender, receiver: receiver, amount: amount, _labels: [\"Transfer\"], _id: id(sender)}", passThrough:true)
+    incomingTransfers: [Transfer] @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-(sender:Account) RETURN this AS receiver, sender AS sender, r.amount AS amount")
+    ownedBy: Person @relation(name:"OWNED_BY", direction: "OUT")
+    linkedAccounts(first: Int): [Account] @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]-(a:Account) RETURN a LIMIT $first")
+
+}
+
+type LinkedAccount {
+    amount: Float
+    id: ID!
+}
+
+type Account {
+    id: ID!
+    centrality: Float
+    cluster: String
+    current: Boolean
+    partition: Int
+    totalIncoming: Float @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->() RETURN sum(r.amount)")
+    totalOutgoing: Float @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-() RETURN sum(r.amount)")
+    numIncomingTransfers: Int @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-() RETURN COUNT(*)")
+    numOutgoingTransfers: Int @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->() RETURN COUNT(*)")
+    outgoingTransfers: [Transfer] @cypher(statement:"MATCH (this)-[r:SEND_MONEY_TO]->(rec:Account) WITH this{.*} AS sender, rec{.*} AS receiver, r.amount AS amount RETURN {sender: sender, receiver: receiver, amount: amount, _labels: [\"Transfer\"], _id: id(sender)}", passThrough:true)
+    incomingTransfers: [Transfer] @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-(sender:Account) RETURN this AS receiver, sender AS sender, r.amount AS amount")
+    ownedBy: Person @relation(name:"OWNED_BY", direction: "OUT")
+    linkedAccounts(first: Int): [Account] @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]-(a:Account) RETURN a LIMIT $first")
+}
+
+type Transfer {
+    sender: LaunderingTarget
+    receiver: LaunderingTarget
+    amount: Float
+}
+
+type Person {
+    name: String
+    accounts: [Account] @relation(name: "OWNED_BY", direction: "IN")
+}
+
+type Query {
+    getLaunderingTargets(limit: Int): [LaunderingTarget] @cypher(statement: "MATCH (l:LaunderingTarget) RETURN l{.*} LIMIT $limit")
+}
+
+schema {
+    mutation: Mutation
+    query: Query
+}
