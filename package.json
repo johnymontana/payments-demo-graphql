@@ -1,7 +1,11 @@
 {
   "name": "payments-demo-graphql",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.1",
+  "private": false,
+  "homepage": ".",
+  "neo4jDesktop": {
+    "apiVersion": "1.2.0"
+  },
   "dependencies": {
     "apollo-client": "^1.9.3",
     "react": "^16.0.0",
@@ -14,7 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && mv build dist",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
