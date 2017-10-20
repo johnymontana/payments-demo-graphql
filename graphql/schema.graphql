@@ -1,52 +1,52 @@
 type LaunderingTarget {
-    id: ID!
+    accountId: ID!
     centrality: Float
     cluster: String
     current: Boolean
     partition: Int
-    totalIncoming: Float @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->() RETURN sum(r.amount)")
-    totalOutgoing: Float @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-() RETURN sum(r.amount)")
-    numIncomingTransfers: Int @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-() RETURN COUNT(*)")
-    numOutgoingTransfers: Int @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->() RETURN COUNT(*)")
-    outgoingTransfers: [Transfer] @cypher(statement:"MATCH (this)-[r:SEND_MONEY_TO]->(rec:Account) WITH this{.*} AS sender, rec{.*} AS receiver, r.amount AS amount RETURN {sender: sender, receiver: receiver, amount: amount}", passThrough:true)
-    incomingTransfers: [Transfer] @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-(sender:Account) RETURN this AS receiver, sender AS sender, r.amount AS amount")
+    totalIncoming: Float @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->() RETURN sum(r.amount)")
+    totalOutgoing: Float @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-() RETURN sum(r.amount)")
+    numIncomingTransfers: Int @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-() RETURN COUNT(*)")
+    numOutgoingTransfers: Int @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->() RETURN COUNT(*)")
+    outgoingTransfers: [Transfer] @cypher(statement:"MATCH (this)-[r:SENDS_MONEY_TO]->(rec:Account) WITH this{.*} AS sender, rec{.*} AS receiver, r.amount AS amount RETURN {sender: sender, receiver: receiver, amount: amount}", passThrough:true)
+    incomingTransfers: [Transfer] @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-(sender:Account) RETURN this AS receiver, sender AS sender, r.amount AS amount")
     ownedBy: Person @relation(name:"OWNED_BY", direction: "OUT")
-    linkedAccounts(first: Int): [Account] @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]-(a:Account) RETURN a LIMIT $first")
-    toCluster1: Float @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->(:Cluster_1) RETURN sum(r.amount)")
-    toCluster2: Float @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->(:Cluster_2) RETURN sum(r.amount)")
-    toCluster3: Float @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->(:Cluster_3) RETURN sum(r.amount)")
-    toCluster4: Float @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->(:Cluster_4) RETURN sum(r.amount)")
-    toCluster5: Float @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->(:Cluster_5) RETURN sum(r.amount)")
-    fromCluster1: Float @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-(:Cluster_1) RETURN sum(r.amount)")
-    fromCluster2: Float @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-(:Cluster_2) RETURN sum(r.amount)")
-    fromCluster3: Float @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-(:Cluster_3) RETURN sum(r.amount)")
-    fromCluster4: Float @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-(:Cluster_4) RETURN sum(r.amount)")
-    fromCluster5: Float @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-(:Cluster_5) RETURN sum(r.amount)")
-    outgoingSeries: [Float] @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->() RETURN coalesce(r.amount, 0.0)")
-    incomingSeries: [Float] @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-() RETURN coalesce(r.amount, 0.0)")
-    allSeries: [Float] @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]-() RETURN coalesce(r.amount, 0.0)")
+    linkedAccounts(first: Int): [Account] @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]-(a:Account) RETURN a LIMIT $first")
+    toCluster1: Float @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->(:Cluster_1) RETURN sum(r.amount)")
+    toCluster2: Float @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->(:Cluster_2) RETURN sum(r.amount)")
+    toCluster3: Float @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->(:Cluster_3) RETURN sum(r.amount)")
+    toCluster4: Float @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->(:Cluster_4) RETURN sum(r.amount)")
+    toCluster5: Float @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->(:Cluster_5) RETURN sum(r.amount)")
+    fromCluster1: Float @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-(:Cluster_1) RETURN sum(r.amount)")
+    fromCluster2: Float @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-(:Cluster_2) RETURN sum(r.amount)")
+    fromCluster3: Float @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-(:Cluster_3) RETURN sum(r.amount)")
+    fromCluster4: Float @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-(:Cluster_4) RETURN sum(r.amount)")
+    fromCluster5: Float @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-(:Cluster_5) RETURN sum(r.amount)")
+    outgoingSeries: [Float] @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->() RETURN coalesce(r.amount, 0.0)")
+    incomingSeries: [Float] @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-() RETURN coalesce(r.amount, 0.0)")
+    allSeries: [Float] @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]-() RETURN coalesce(r.amount, 0.0)")
 
 }
 
 type LinkedAccount {
     amount: Float
-    id: ID!
+    accountId: ID!
 }
 
 type Account {
-    id: ID!
+    accountId: ID!
     centrality: Float
     cluster: String
     current: Boolean
     partition: Int
-    totalIncoming: Float @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->() RETURN sum(r.amount)")
-    totalOutgoing: Float @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-() RETURN sum(r.amount)")
-    numIncomingTransfers: Int @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-() RETURN COUNT(*)")
-    numOutgoingTransfers: Int @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]->() RETURN COUNT(*)")
-    outgoingTransfers: [Transfer] @cypher(statement:"MATCH (this)-[r:SEND_MONEY_TO]->(rec:Account) WITH this{.*} AS sender, rec{.*} AS receiver, r.amount AS amount RETURN {sender: sender, receiver: receiver, amount: amount, _labels: [\"Transfer\"], _id: id(sender)}", passThrough:true)
-    incomingTransfers: [Transfer] @cypher(statement: "MATCH (this)<-[r:SEND_MONEY_TO]-(sender:Account) RETURN this AS receiver, sender AS sender, r.amount AS amount")
+    totalIncoming: Float @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->() RETURN sum(r.amount)")
+    totalOutgoing: Float @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-() RETURN sum(r.amount)")
+    numIncomingTransfers: Int @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-() RETURN COUNT(*)")
+    numOutgoingTransfers: Int @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]->() RETURN COUNT(*)")
+    outgoingTransfers: [Transfer] @cypher(statement:"MATCH (this)-[r:SENDS_MONEY_TO]->(rec:Account) WITH this{.*} AS sender, rec{.*} AS receiver, r.amount AS amount RETURN {sender: sender, receiver: receiver, amount: amount, _labels: [\"Transfer\"], _id: id(sender)}", passThrough:true)
+    incomingTransfers: [Transfer] @cypher(statement: "MATCH (this)<-[r:SENDS_MONEY_TO]-(sender:Account) RETURN this AS receiver, sender AS sender, r.amount AS amount")
     ownedBy: Person @relation(name:"OWNED_BY", direction: "OUT")
-    linkedAccounts(first: Int): [Account] @cypher(statement: "MATCH (this)-[r:SEND_MONEY_TO]-(a:Account) RETURN a LIMIT $first")
+    linkedAccounts(first: Int): [Account] @cypher(statement: "MATCH (this)-[r:SENDS_MONEY_TO]-(a:Account) RETURN a LIMIT $first")
 }
 
 type Transfer {

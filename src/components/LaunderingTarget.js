@@ -35,7 +35,7 @@ class LaunderingTarget extends Component {
             <Statistic.Group color='teal'>
               <Statistic>
                 <Statistic.Value>
-                  <NumberFormat value={this.props.totalIncoming} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalPrecision={0} />
+                  <NumberFormat value={this.props.totalIncoming} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalPrecision={2} />
                   </Statistic.Value>
                 <Statistic.Label>Incoming Transfers ($)</Statistic.Label>
               </Statistic>
@@ -44,7 +44,7 @@ class LaunderingTarget extends Component {
                 <Statistic.Label>Incoming Transfers</Statistic.Label>
               </Statistic>
               <Statistic>
-                <Statistic.Value><NumberFormat value={this.props.totalOutgoing} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalPrecision={0} /></Statistic.Value>
+                <Statistic.Value><NumberFormat value={this.props.totalOutgoing} displayType={'text'} thousandSeparator={true} prefix={'$'} decimalPrecision={2} /></Statistic.Value>
                 <Statistic.Label>Outgoing Transfers ($)</Statistic.Label>
               </Statistic>
               <Statistic>
