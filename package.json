@@ -1,7 +1,8 @@
 {
   "name": "payments-demo-graphql",
-  "version": "0.1.0",
-  "private": true,
+
+  "version": "0.1.1",
+  "private": false,
   "homepage": ".",
   "neo4jDesktop": {
     "apiVersion": "1.2.0"
