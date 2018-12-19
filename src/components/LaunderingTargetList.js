@@ -16,8 +16,8 @@ const LaunderingTargetList = ({data}) => {
     <Item.Group divided>
       {data.targets.map(target => (
         <LaunderingTarget
-          key={target.id}
-          id={target.id}
+          key={target.accountId}
+          id={target.accountId}
           owner={target.ownedBy.name}
           centrality={target.centrality}
           partition={target.partition}
@@ -50,7 +50,7 @@ export default graphql(
   gql`
       {
           targets: LaunderingTarget(first: 10) {
-          id
+          accountId
           ownedBy {
               name
           }
@@ -76,7 +76,7 @@ export default graphql(
           outgoingSeries
           allSeries
           linkedAccounts(first:3) {
-              id
+              accountId
               cluster
               centrality
               ownedBy {
